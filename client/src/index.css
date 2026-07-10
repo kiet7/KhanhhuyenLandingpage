@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Be Vietnam Pro", "Inter", system-ui, sans-serif;
+  --font-display: "Baloo 2", "Be Vietnam Pro", sans-serif;
+
+  /* Hồng san hô - màu chủ đạo */
+  --color-primary-50: #fff1f2;
+  --color-primary-100: #ffe1e4;
+  --color-primary-200: #ffc7cd;
+  --color-primary-300: #ff9fab;
+  --color-primary-400: #ff6b81;
+  --color-primary-500: #fb4570;
+  --color-primary-600: #e82a5c;
+  --color-primary-700: #c31d4a;
+  --color-primary-800: #a11c42;
+  --color-primary-900: #881c3d;
+
+  /* Cam đào - màu phụ */
+  --color-accent-50: #fff8ed;
+  --color-accent-100: #ffefd1;
+  --color-accent-200: #ffdca3;
+  --color-accent-300: #ffc16a;
+  --color-accent-400: #ff9e3d;
+  --color-accent-500: #ff8019;
+  --color-accent-600: #f2620d;
+  --color-accent-700: #c94a0d;
+  --color-accent-800: #9f3b13;
+  --color-accent-900: #813213;
+
+  /* Nền kem ấm */
+  --color-cream-50: #fffdf9;
+  --color-cream-100: #fff8ee;
+  --color-cream-200: #fef0dd;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background-color: var(--color-cream-50);
+  color: #3a2c2f;
+}

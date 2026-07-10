@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "bradlc.vscode-tailwindcss",
+    "oxc.oxc-vscode",
+    "mongodb.mongodb-vscode",
+    "humao.rest-client"
+  ]
+}

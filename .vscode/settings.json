@@ -1,0 +1,9 @@
+{
+  "tailwindCSS.experimental.configFile": {
+    "client/src/index.css": "client/**"
+  },
+  "files.exclude": {
+    "**/node_modules": true,
+    "**/dist": true
+  }
+}

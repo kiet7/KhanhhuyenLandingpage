@@ -1,0 +1,40 @@
+### File test API nhanh — cần extension "REST Client" (humao.rest-client)
+### Bấm "Send Request" phía trên mỗi block để gọi thử
+
+@baseUrl = http://localhost:5000/api
+
+### Health check
+GET {{baseUrl}}/health
+
+### Lấy profile công khai
+GET {{baseUrl}}/profile
+
+### Lấy danh sách khóa học công khai
+GET {{baseUrl}}/courses
+
+### Đăng nhập admin (nhớ đổi username/password khớp .env)
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin123456"
+}
+
+### Xem thông tin admin đang đăng nhập (dùng cookie từ request login ở trên)
+GET {{baseUrl}}/auth/me
+
+### Xem danh sách liên hệ (cần đăng nhập)
+GET {{baseUrl}}/contact
+
+### Gửi thử 1 liên hệ (public)
+POST {{baseUrl}}/contact
+Content-Type: application/json
+
+{
+  "name": "Nguyễn Văn Test",
+  "phone": "0912345678",
+  "email": "test@example.com",
+  "message": "Mình muốn hỏi về khóa học sơ cấp"
+}

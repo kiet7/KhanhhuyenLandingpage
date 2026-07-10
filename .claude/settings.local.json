@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(netstat -ano)",
+      "Bash(powershell -Command \"Stop-Process -Id 7684 -Force\")",
+      "Bash(npm run *)",
+      "Read(//tmp/**)",
+      "Bash(node -e ' *)"
+    ]
+  }
+}

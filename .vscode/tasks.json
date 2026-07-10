@@ -1,0 +1,53 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Mongo: start (docker compose)",
+      "type": "shell",
+      "command": "docker compose up -d",
+      "problemMatcher": []
+    },
+    {
+      "label": "Mongo: stop",
+      "type": "shell",
+      "command": "docker compose down",
+      "problemMatcher": []
+    },
+    {
+      "label": "Server: dev",
+      "type": "npm",
+      "script": "dev",
+      "path": "server",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "group": "dev",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Client: dev",
+      "type": "npm",
+      "script": "dev",
+      "path": "client",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "group": "dev",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Run All (server + client)",
+      "dependsOn": ["Server: dev", "Client: dev"],
+      "dependsOrder": "parallel",
+      "problemMatcher": []
+    },
+    {
+      "label": "Run All (Mongo + server + client)",
+      "dependsOn": ["Mongo: start (docker compose)", "Run All (server + client)"],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    }
+  ]
+}
