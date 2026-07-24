@@ -13,6 +13,14 @@ const courseSchema = new mongoose.Schema(
     },
     durationWeeks: { type: Number, default: 8 },
     schedule: { type: String, default: "" },
+    sessions: [
+      {
+        _id: false,
+        day: { type: Number, min: 0, max: 6, required: true }, // 0 = Chủ Nhật ... 6 = Thứ 7
+        startTime: { type: String, default: "" }, // "HH:mm"
+        endTime: { type: String, default: "" }, // "HH:mm"
+      },
+    ],
     price: { type: Number, default: 0 },
     imageUrl: { type: String, default: "" },
     syllabus: [{ type: String }],
