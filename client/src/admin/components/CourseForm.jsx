@@ -12,6 +12,7 @@ export const emptyCourse = {
   description: "",
   level: "Sơ cấp",
   durationWeeks: "",
+  startDate: "",
   schedule: "",
   sessions: [],
   price: "",
@@ -45,7 +46,11 @@ export default function CourseForm({
   submitLabel = "Lưu khóa học",
   compact = false,
 }) {
-  const [form, setForm] = useState(() => ({ ...emptyCourse, ...initial }));
+  const [form, setForm] = useState(() => ({
+    ...emptyCourse,
+    ...initial,
+    startDate: initial.startDate ? String(initial.startDate).slice(0, 10) : "",
+  }));
   const [syllabusText, setSyllabusText] = useState((initial.syllabus || []).join("\n"));
   const [sessionsByDay, setSessionsByDay] = useState(() => {
     const map = {};
@@ -129,6 +134,15 @@ export default function CourseForm({
             onChange={(e) => setForm({ ...form, price: e.target.value === "" ? "" : Number(e.target.value) })}
             className={inputClass}
           />
+          <label className="flex flex-col gap-1 text-sm text-primary-900/60">
+            Ngày khai giảng
+            <input
+              type="date"
+              value={form.startDate}
+              onChange={(e) => setForm({ ...form, startDate: e.target.value })}
+              className={inputClass}
+            />
+          </label>
         </div>
 
         <div className="mt-4">

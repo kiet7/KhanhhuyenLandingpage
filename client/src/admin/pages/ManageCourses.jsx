@@ -5,7 +5,7 @@ import Button from "../../components/ui/Button";
 import Badge from "../../components/ui/Badge";
 import Spinner from "../../components/ui/Spinner";
 import CourseForm, { emptyCourse } from "../components/CourseForm";
-import { formatPrice } from "../../lib/format";
+import { formatPrice, formatDate } from "../../lib/format";
 
 export default function ManageCourses() {
   const [courses, setCourses] = useState(null);
@@ -97,6 +97,7 @@ export default function ManageCourses() {
                   </div>
                   <p className="text-sm text-primary-900/50">
                     {course.level} · {formatPrice(course.price)}
+                    {course.startDate && ` · Khai giảng ${formatDate(course.startDate)}`}
                   </p>
                 </div>
               </div>

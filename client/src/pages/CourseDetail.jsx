@@ -6,7 +6,7 @@ import Card from "../components/ui/Card";
 import Badge from "../components/ui/Badge";
 import Button from "../components/ui/Button";
 import Spinner from "../components/ui/Spinner";
-import { formatPrice } from "../lib/format";
+import { formatPrice, formatDate } from "../lib/format";
 
 export default function CourseDetail() {
   const { slug } = useParams();
@@ -67,6 +67,9 @@ export default function CourseDetail() {
         <Badge>{course.level}</Badge>
         <span className="text-sm text-primary-900/50">{course.durationWeeks} tuần</span>
         {course.schedule && <span className="text-sm text-primary-900/50">· {course.schedule}</span>}
+        {course.startDate && (
+          <span className="text-sm text-primary-900/50">· Khai giảng {formatDate(course.startDate)}</span>
+        )}
       </div>
 
       <h1 className="mt-3 font-display text-3xl font-extrabold text-primary-900">{course.title}</h1>

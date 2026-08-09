@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Card from "./ui/Card";
 import Badge from "./ui/Badge";
-import { formatPrice } from "../lib/format";
+import { formatPrice, formatDate } from "../lib/format";
 
 export default function CourseCard({ course }) {
   return (
@@ -24,6 +24,9 @@ export default function CourseCard({ course }) {
               </svg>
               {course.schedule}
             </p>
+          )}
+          {course.startDate && (
+            <p className="mt-2 text-sm text-primary-900/50">Khai giảng {formatDate(course.startDate)}</p>
           )}
           <div className="mt-3 flex items-center justify-between">
             <p className="font-semibold text-accent-600">{formatPrice(course.price)}</p>
