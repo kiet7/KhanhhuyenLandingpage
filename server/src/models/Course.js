@@ -12,6 +12,7 @@ const courseSchema = new mongoose.Schema(
       default: "Sơ cấp",
     },
     durationWeeks: { type: Number, default: 8 },
+    startDate: { type: Date },
     schedule: { type: String, default: "" },
     sessions: [
       {

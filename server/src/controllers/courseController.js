@@ -37,6 +37,12 @@ function applyScheduleLabel(data) {
   }
 }
 
+function normalizeStartDate(data) {
+  if (data.startDate === "") {
+    data.startDate = null;
+  }
+}
+
 export async function listCourses(req, res) {
   const filter = req.query.all === "true" ? {} : { isActive: true };
   const courses = await Course.find(filter).sort({ order: 1, createdAt: -1 });
@@ -59,6 +65,7 @@ export async function createCourse(req, res) {
     data.slug = slugify(data.slug);
   }
   applyScheduleLabel(data);
+  normalizeStartDate(data);
   const course = await Course.create(data);
   res.status(201).json(course);
 }
@@ -67,6 +74,7 @@ export async function updateCourse(req, res) {
   const data = { ...req.body };
   if (data.slug) data.slug = slugify(data.slug);
   applyScheduleLabel(data);
+  normalizeStartDate(data);
   const course = await Course.findByIdAndUpdate(req.params.id, data, {
     new: true,
     runValidators: true,
