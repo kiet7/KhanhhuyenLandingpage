@@ -21,6 +21,14 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
+app.get("/", (req, res) => {
+  res.json({
+    status: "ok",
+    service: "khanhhuyenlandingpageserver",
+    message: "Server đang hoạt động. Dùng /api/health để kiểm tra health check.",
+  });
+});
+
 app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 
 app.use("/api/auth", authRoutes);
