@@ -10,18 +10,21 @@ import Course from "../models/Course.js";
 async function seed() {
   await connectDB();
 
-  // Admin
-  const adminUsername = process.env.ADMIN_USERNAME || "admin";
-  const adminPassword = process.env.ADMIN_PASSWORD || "changeme123";
-  const existingAdmin = await Admin.findOne({ username: adminUsername });
-  if (!existingAdmin) {
-    const passwordHash = await bcrypt.hash(adminPassword, 10);
-    await Admin.create({ username: adminUsername, passwordHash });
-    console.log(`[seed] Đã tạo tài khoản admin: ${adminUsername}`);
-  } else {
-    console.log("[seed] Tài khoản admin đã tồn tại, bỏ qua");
-  }
 
+
+  // Admin
+// Thay "ten_admin_cua_ban" và "mat_khau_cua_ban" bằng thông tin bạn muốn
+const adminUsername = "hothikhanhhuyen"; 
+const adminPassword = "hothikhanhhuyen"; 
+
+const existingAdmin = await Admin.findOne({ username: adminUsername });
+if (!existingAdmin) {
+  const passwordHash = await bcrypt.hash(adminPassword, 10);
+  await Admin.create({ username: adminUsername, passwordHash });
+  console.log(`[seed] Đã tạo tài khoản admin: ${adminUsername}`);
+} else {
+  console.log("[seed] Tài khoản admin đã tồn tại, bỏ qua");
+}
   // Profile
   const existingProfile = await Profile.findOne();
   if (!existingProfile) {
