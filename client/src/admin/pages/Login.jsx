@@ -29,7 +29,7 @@ export default function Login() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-cream-50 px-4">
       <Card className="w-full max-w-sm p-8">
-        <h1 className="font-display text-xl font-bold text-primary-900">Đăng nhập quản trị</h1>
+        <h1 className="font-display text-xl font-bold text-primary-900">ĐĂNG NHẬP</h1>
         <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
           <input
             required
