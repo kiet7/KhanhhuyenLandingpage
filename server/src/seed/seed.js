@@ -10,7 +10,9 @@ import Course from "../models/Course.js";
 async function seed() {
   await connectDB();
 
-  // Admin
+
+
+   // Admin
   const adminUsername = process.env.ADMIN_USERNAME || "admin";
   const adminPassword = process.env.ADMIN_PASSWORD || "changeme123";
   const existingAdmin = await Admin.findOne({ username: adminUsername });
@@ -21,7 +23,6 @@ async function seed() {
   } else {
     console.log("[seed] Tài khoản admin đã tồn tại, bỏ qua");
   }
-
   // Profile
   const existingProfile = await Profile.findOne();
   if (!existingProfile) {
