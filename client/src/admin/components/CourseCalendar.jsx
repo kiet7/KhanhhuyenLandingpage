@@ -50,11 +50,13 @@ function isSameDay(a, b) {
   return a.toDateString() === b.toDateString();
 }
 
-function isoWeekNumber(date) {
-  const d = startOfDay(date);
-  d.setDate(d.getDate() + 3 - ((d.getDay() + 6) % 7)); // Thứ 5 của tuần
-  const week1 = new Date(d.getFullYear(), 0, 4);
-  return 1 + Math.round(((d - week1) / 86400000 - 3 + ((week1.getDay() + 6) % 7)) / 7);
+// Tuần theo năm dương lịch: tuần 1 là tuần (T2 - CN) chứa ngày 1/1.
+// Tuần vắt qua năm mới (vd 29/12 - 04/01) tính là tuần 1 của năm mới.
+function weekOfYear(date) {
+  const weekStart = startOfWeek(date);
+  const year = addDays(weekStart, 6).getFullYear();
+  const firstWeekStart = startOfWeek(new Date(year, 0, 1));
+  return Math.round((weekStart - firstWeekStart) / (7 * 86400000)) + 1;
 }
 
 function pad(n) {
@@ -179,7 +181,7 @@ export default function CourseCalendar({ courses }) {
     rangeLabel = formatDay(anchor);
   } else if (view === "week") {
     rangeLabel = `${formatDay(weekStart)} - ${formatDay(weekEnd)}`;
-    title = `Lịch dạy Tuần ${isoWeekNumber(weekStart)}: ${rangeLabel}`;
+    title = `Lịch dạy Tuần ${weekOfYear(weekStart)}: ${rangeLabel}`;
   } else {
     rangeLabel = `Tháng ${anchor.getMonth() + 1}/${anchor.getFullYear()}`;
     title = `Lịch dạy ${rangeLabel}`;
