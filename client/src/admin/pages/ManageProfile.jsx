@@ -231,29 +231,44 @@ export default function ManageProfile() {
         <div className="mt-4 flex flex-col gap-4">
           {profile.achievements.map((a, i) => (
             <div key={i} className="rounded-2xl border border-primary-100 p-4">
+              <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-primary-900/40">
+                Thành tích #{i + 1}
+              </p>
               <div className="grid gap-3 sm:grid-cols-2">
-                <input
-                  placeholder="Tiêu đề"
-                  value={a.title}
-                  onChange={(e) => updateListItem("achievements", i, "title", e.target.value)}
-                  className={inputClass}
-                />
-                <input
-                  placeholder="Năm"
-                  value={a.year}
-                  onChange={(e) => updateListItem("achievements", i, "year", e.target.value)}
-                  className={inputClass}
-                />
+                <Field label="Tiêu đề *" hint="Tên thành tích, giải thưởng">
+                  <input
+                    required
+                    placeholder="VD: Giải Nhất Hùng biện tiếng Trung"
+                    value={a.title}
+                    onChange={(e) => updateListItem("achievements", i, "title", e.target.value)}
+                    className={inputClass}
+                  />
+                </Field>
+                <Field label="Năm" hint="Hiện trong vòng tròn bên trái, nên ngắn (VD: 2024)">
+                  <input
+                    placeholder="VD: 2024"
+                    value={a.year}
+                    onChange={(e) => updateListItem("achievements", i, "year", e.target.value)}
+                    className={inputClass}
+                  />
+                </Field>
               </div>
-              <textarea
-                placeholder="Mô tả"
-                value={a.description}
-                onChange={(e) => updateListItem("achievements", i, "description", e.target.value)}
-                rows={2}
-                className={`${inputClass} mt-3`}
-              />
-              <div className="mt-3 flex items-center justify-between">
-                <ImageUploader value={a.imageUrl} onChange={(url) => updateListItem("achievements", i, "imageUrl", url)} />
+              <Field label="Mô tả" hint="Một vài câu giải thích thêm (không bắt buộc)" className="mt-3">
+                <textarea
+                  placeholder="VD: Cuộc thi do Lãnh sự quán Trung Quốc tổ chức..."
+                  value={a.description}
+                  onChange={(e) => updateListItem("achievements", i, "description", e.target.value)}
+                  rows={2}
+                  className={inputClass}
+                />
+              </Field>
+              <div className="mt-3 flex items-end justify-between gap-4">
+                <ImageUploader
+                  label="Ảnh minh họa"
+                  value={a.imageUrl}
+                  onChange={(url) => updateListItem("achievements", i, "imageUrl", url)}
+                  hint="Hiện trang giới thiệu chưa hiển thị ảnh thành tích, có thể bỏ trống."
+                />
                 <button
                   type="button"
                   onClick={() => removeListItem("achievements", i)}
@@ -281,28 +296,45 @@ export default function ManageProfile() {
         <div className="mt-4 flex flex-col gap-4">
           {profile.certificates.map((c, i) => (
             <div key={i} className="rounded-2xl border border-primary-100 p-4">
+              <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-primary-900/40">
+                Chứng chỉ #{i + 1}
+              </p>
               <div className="grid gap-3 sm:grid-cols-3">
-                <input
-                  placeholder="Tên chứng chỉ"
-                  value={c.title}
-                  onChange={(e) => updateListItem("certificates", i, "title", e.target.value)}
-                  className={inputClass}
-                />
-                <input
-                  placeholder="Đơn vị cấp"
-                  value={c.issuer}
-                  onChange={(e) => updateListItem("certificates", i, "issuer", e.target.value)}
-                  className={inputClass}
-                />
-                <input
-                  placeholder="Năm"
-                  value={c.year}
-                  onChange={(e) => updateListItem("certificates", i, "year", e.target.value)}
-                  className={inputClass}
-                />
+                <Field label="Tên chứng chỉ *">
+                  <input
+                    required
+                    placeholder="VD: HSK 6"
+                    value={c.title}
+                    onChange={(e) => updateListItem("certificates", i, "title", e.target.value)}
+                    className={inputClass}
+                  />
+                </Field>
+                <Field label="Đơn vị cấp">
+                  <input
+                    placeholder="VD: Hanban"
+                    value={c.issuer}
+                    onChange={(e) => updateListItem("certificates", i, "issuer", e.target.value)}
+                    className={inputClass}
+                  />
+                </Field>
+                <Field label="Năm">
+                  <input
+                    placeholder="VD: 2023"
+                    value={c.year}
+                    onChange={(e) => updateListItem("certificates", i, "year", e.target.value)}
+                    className={inputClass}
+                  />
+                </Field>
               </div>
-              <div className="mt-3 flex items-center justify-between">
-                <ImageUploader value={c.imageUrl} onChange={(url) => updateListItem("certificates", i, "imageUrl", url)} />
+              <div className="mt-3 flex items-end justify-between gap-4">
+                <ImageUploader
+                  label="Ảnh chứng chỉ"
+                  value={c.imageUrl}
+                  onChange={(url) => updateListItem("certificates", i, "imageUrl", url)}
+                  recommended={{ width: 1200, height: 1600 }}
+                  previewClassName="h-24 w-18"
+                  hint="Ảnh dọc 3:4. Ảnh ngang sẽ bị cắt ở thẻ, nhưng vẫn xem đầy đủ khi bấm vào."
+                />
                 <button
                   type="button"
                   onClick={() => removeListItem("certificates", i)}
@@ -330,35 +362,48 @@ export default function ManageProfile() {
         <div className="mt-4 flex flex-col gap-4">
           {profile.testimonials.map((t, i) => (
             <div key={i} className="rounded-2xl border border-primary-100 p-4">
+              <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-primary-900/40">
+                Cảm nhận #{i + 1}
+              </p>
               <div className="grid gap-3 sm:grid-cols-2">
-                <input
-                  placeholder="Tên học viên"
-                  value={t.studentName}
-                  onChange={(e) => updateListItem("testimonials", i, "studentName", e.target.value)}
-                  className={inputClass}
-                />
-                <input
-                  type="number"
-                  min={1}
-                  max={5}
-                  placeholder="Số sao (1-5)"
-                  value={t.rating}
-                  onChange={(e) => updateListItem("testimonials", i, "rating", Number(e.target.value))}
-                  className={inputClass}
-                />
+                <Field label="Tên học viên *">
+                  <input
+                    required
+                    placeholder="VD: Nguyễn Minh Anh"
+                    value={t.studentName}
+                    onChange={(e) => updateListItem("testimonials", i, "studentName", e.target.value)}
+                    className={inputClass}
+                  />
+                </Field>
+                <Field label="Số sao" hint="Từ 1 đến 5">
+                  <input
+                    type="number"
+                    min={1}
+                    max={5}
+                    placeholder="5"
+                    value={t.rating}
+                    onChange={(e) => updateListItem("testimonials", i, "rating", Number(e.target.value))}
+                    className={inputClass}
+                  />
+                </Field>
               </div>
-              <textarea
-                placeholder="Nội dung cảm nhận"
-                value={t.content}
-                onChange={(e) => updateListItem("testimonials", i, "content", e.target.value)}
-                rows={3}
-                className={`${inputClass} mt-3`}
-              />
-              <div className="mt-3 flex items-center justify-between">
+              <Field label="Nội dung cảm nhận *" hint="Hiển thị trong mục cảm nhận ở trang chủ" className="mt-3">
+                <textarea
+                  required
+                  placeholder="VD: Cô dạy rất dễ hiểu, sau 3 tháng mình đã thi đỗ HSK 4..."
+                  value={t.content}
+                  onChange={(e) => updateListItem("testimonials", i, "content", e.target.value)}
+                  rows={3}
+                  className={inputClass}
+                />
+              </Field>
+              <div className="mt-3 flex items-end justify-between gap-4">
                 <ImageUploader
                   label="Ảnh học viên"
                   value={t.avatarUrl}
                   onChange={(url) => updateListItem("testimonials", i, "avatarUrl", url)}
+                  recommended={{ width: 200, height: 200 }}
+                  hint="Ảnh vuông, hiển thị tròn nhỏ cạnh tên học viên."
                 />
                 <button
                   type="button"
