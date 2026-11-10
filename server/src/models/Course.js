@@ -28,6 +28,8 @@ const courseSchema = new mongoose.Schema(
     featured: { type: Boolean, default: false },
     order: { type: Number, default: 0 },
     isActive: { type: Boolean, default: true },
+    // Tắt khi lớp đã đủ học viên: vẫn hiển thị khóa học nhưng không nhận form đăng ký
+    registrationOpen: { type: Boolean, default: true },
   },
   { timestamps: true }
 );

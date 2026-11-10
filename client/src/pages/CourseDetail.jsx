@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useOutletContext, Link } from "react-router-dom";
 import { getCourseBySlug } from "../api/courses";
 import { submitContact } from "../api/contact";
 import Card from "../components/ui/Card";
@@ -19,6 +19,7 @@ function cachedCourse(slug) {
 
 export default function CourseDetail() {
   const { slug } = useParams();
+  const { profile } = useOutletContext();
   const [course, setCourse] = useState(() => cachedCourse(slug));
   const [form, setForm] = useState({ name: "", phone: "", email: "", message: "" });
   const [status, setStatus] = useState("idle"); // idle | sending | sent | error
@@ -52,8 +53,10 @@ export default function CourseDetail() {
       await submitContact({ ...form, courseInterested: course._id });
       setStatus("sent");
       setForm({ name: "", phone: "", email: "", message: "" });
-    } catch {
-      setStatus("error");
+    } catch (err) {
+      // 403 = admin vừa tắt nhận đăng ký khóa này → chuyển sang thông báo tạm ngưng
+      if (err.response?.status === 403) setCourse((c) => ({ ...c, registrationOpen: false }));
+      setStatus(err.response?.status === 403 ? "idle" : "error");
     }
   }
 
@@ -75,6 +78,8 @@ export default function CourseDetail() {
       </div>
     );
   }
+
+  const registrationOpen = course.registrationOpen !== false; // khóa cũ chưa có trường này = đang nhận
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6">
@@ -100,9 +105,13 @@ export default function CourseDetail() {
       <h1 className="mt-3 font-display text-3xl font-extrabold text-primary-900">{course.title}</h1>
       <div className="mt-2 flex flex-wrap items-center gap-4">
         <p className="text-xl font-semibold text-accent-600">{formatPrice(course.price)}</p>
-        <Button type="button" onClick={openRegisterForm}>
-          Đăng ký khóa học
-        </Button>
+        {registrationOpen ? (
+          <Button type="button" onClick={openRegisterForm}>
+            Đăng ký khóa học
+          </Button>
+        ) : (
+          <Badge className="bg-amber-100 text-amber-700">Tạm ngưng nhận đăng ký</Badge>
+        )}
       </div>
       <div className="mt-4">
         <ShareButtons url={courseUrl(course)} />
@@ -125,6 +134,9 @@ export default function CourseDetail() {
         </Card>
       )}
 
+      {!registrationOpen ? (
+        <RegistrationClosed contact={profile?.socialLinks} />
+      ) : (
       <Card className="mt-8 scroll-mt-24 p-6 sm:p-8" id="dang-ky">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="font-display text-lg font-bold text-primary-900">
@@ -195,6 +207,47 @@ export default function CourseDetail() {
           </form>
         )}
       </Card>
+      )}
     </div>
+  );
+}
+
+// Zalo trong admin có thể là link hoặc chỉ là số điện thoại
+function zaloHref(value) {
+  if (!value) return null;
+  return /^https?:\/\//.test(value) ? value : `https://zalo.me/${value.replace(/\D/g, "")}`;
+}
+
+// Thay cho form đăng ký khi admin tắt "Nhận đăng ký" (lớp đã đủ học viên)
+function RegistrationClosed({ contact }) {
+  const phone = contact?.phone;
+  const zalo = zaloHref(contact?.zaloUrl);
+  return (
+    <Card className="mt-8 scroll-mt-24 p-6 sm:p-8" id="dang-ky">
+      <div className="flex items-start gap-4">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber-100 text-lg">⏸</span>
+        <div>
+          <h2 className="font-display text-lg font-bold text-primary-900">Khóa học tạm ngưng nhận đăng ký</h2>
+          <p className="mt-1 text-sm text-primary-900/60">
+            Lớp hiện đã đủ học viên. Liên hệ để được báo lịch khai giảng khóa tiếp theo hoặc tư vấn khóa học phù hợp.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {zalo && (
+              <a href={zalo} target="_blank" rel="noreferrer" className="rounded-full bg-[#0068ff] px-4 py-2 text-sm font-semibold text-white hover:opacity-90">
+                Nhắn Zalo
+              </a>
+            )}
+            {phone && (
+              <a href={`tel:${phone.replace(/\s/g, "")}`} className="rounded-full bg-primary-50 px-4 py-2 text-sm font-semibold text-primary-600 hover:bg-primary-100">
+                Gọi {phone}
+              </a>
+            )}
+            <Link to="/khoa-hoc" className="rounded-full px-4 py-2 text-sm font-semibold text-primary-600 hover:underline">
+              Xem khóa học khác →
+            </Link>
+          </div>
+        </div>
+      </div>
+    </Card>
   );
 }

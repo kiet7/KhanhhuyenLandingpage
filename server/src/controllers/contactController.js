@@ -1,9 +1,16 @@
 import ContactSubmission from "../models/ContactSubmission.js";
+import Course from "../models/Course.js";
 
 export async function createSubmission(req, res) {
   const { name, phone, email, message, courseInterested } = req.body;
   if (!name || !phone) {
     return res.status(400).json({ message: "Vui lòng nhập họ tên và số điện thoại" });
+  }
+  if (courseInterested) {
+    const course = await Course.findById(courseInterested).select("registrationOpen");
+    if (course && course.registrationOpen === false) {
+      return res.status(403).json({ message: "Khóa học này đang tạm ngưng nhận đăng ký" });
+    }
   }
   const submission = await ContactSubmission.create({
     name,

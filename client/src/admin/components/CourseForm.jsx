@@ -22,6 +22,7 @@ export const emptyCourse = {
   featured: false,
   order: 0,
   isActive: true,
+  registrationOpen: true,
 };
 
 const DAYS = [
@@ -249,6 +250,14 @@ export default function CourseForm({
               onChange={(e) => setForm({ ...form, isActive: e.target.checked })}
             />
             Đang mở (hiển thị công khai)
+          </label>
+          <label className="flex items-center gap-2 text-sm text-primary-900">
+            <input
+              type="checkbox"
+              checked={form.registrationOpen !== false}
+              onChange={(e) => setForm({ ...form, registrationOpen: e.target.checked })}
+            />
+            Nhận đăng ký (tắt khi lớp đã đủ học viên)
           </label>
         </div>
       </Card>

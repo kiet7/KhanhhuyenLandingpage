@@ -5,12 +5,14 @@ import Button from "../../components/ui/Button";
 import Badge from "../../components/ui/Badge";
 import Spinner from "../../components/ui/Spinner";
 import CourseForm, { emptyCourse } from "../components/CourseForm";
+import ToggleSwitch from "../components/ToggleSwitch";
 import { formatPrice, formatDate } from "../../lib/format";
 
 export default function ManageCourses() {
   const [courses, setCourses] = useState(null);
   const [editing, setEditing] = useState(null); // null = list view, object = form view
   const [saving, setSaving] = useState(false);
+  const [togglingId, setTogglingId] = useState(null);
 
   function refresh() {
     listCourses(true).then(setCourses);
@@ -37,6 +39,22 @@ export default function ManageCourses() {
       refresh();
     } finally {
       setSaving(false);
+    }
+  }
+
+  // Bật/tắt nhận đăng ký ngay trên danh sách: cập nhật giao diện trước, lỗi thì trả lại
+  async function handleToggleRegistration(course, open) {
+    const setOpen = (value) =>
+      setCourses((list) => list.map((c) => (c._id === course._id ? { ...c, registrationOpen: value } : c)));
+    setTogglingId(course._id);
+    setOpen(open);
+    try {
+      await updateCourse(course._id, { registrationOpen: open });
+    } catch {
+      setOpen(!open);
+      alert("Không cập nhật được trạng thái đăng ký, vui lòng thử lại.");
+    } finally {
+      setTogglingId(null);
     }
   }
 
@@ -101,7 +119,13 @@ export default function ManageCourses() {
                   </p>
                 </div>
               </div>
-              <div className="flex shrink-0 gap-2">
+              <div className="flex shrink-0 flex-wrap items-center gap-3">
+                <ToggleSwitch
+                  checked={course.registrationOpen !== false}
+                  onChange={(open) => handleToggleRegistration(course, open)}
+                  disabled={togglingId === course._id}
+                  label={course.registrationOpen !== false ? "Nhận đăng ký" : "Ngưng đăng ký"}
+                />
                 <button
                   onClick={() => startEdit(course)}
                   className="rounded-full bg-primary-50 px-4 py-2 text-sm font-semibold text-primary-600 hover:bg-primary-100"
