@@ -16,6 +16,16 @@ export async function fetchCourse(slug) {
   }
 }
 
+// Danh sách khóa học đang mở (public). null nếu backend không phản hồi kịp.
+export async function fetchCourses() {
+  try {
+    const res = await fetch(`${API_BASE}/courses`, { signal: AbortSignal.timeout(API_TIMEOUT_MS) });
+    return res.ok ? await res.json() : null;
+  } catch {
+    return null;
+  }
+}
+
 export function requestOrigin(req) {
   const proto = req.headers["x-forwarded-proto"] || "https";
   return `${proto}://${req.headers["x-forwarded-host"] || req.headers.host}`;

@@ -8,11 +8,12 @@
         {
           "type": "header",
           "key": "user-agent",
-          "value": ".*(facebookexternalhit|Facebot|meta-externalagent|Zalo|Twitterbot|LinkedInBot|Slackbot|TelegramBot|WhatsApp|Discordbot|SkypeUriPreview|Pinterest|Googlebot|bingbot).*"
+          "value": ".*(facebookexternalhit|Facebot|meta-externalagent|Zalo|Twitterbot|LinkedInBot|Slackbot|TelegramBot|WhatsApp|Discordbot|SkypeUriPreview|Pinterest|Googlebot|bingbot|coccocbot).*"
         }
       ],
       "destination": "/api/og?slug=:slug"
     },
+    { "source": "/sitemap.xml", "destination": "/api/sitemap" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

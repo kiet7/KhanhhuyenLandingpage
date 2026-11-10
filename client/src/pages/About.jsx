@@ -2,10 +2,17 @@ import { useOutletContext } from "react-router-dom";
 import { useState } from "react";
 import Card from "../components/ui/Card";
 import Badge from "../components/ui/Badge";
+import { BRAND } from "../lib/og";
+import { usePageMeta } from "../lib/seo";
 
 export default function About() {
   const { profile } = useOutletContext();
   const [lightbox, setLightbox] = useState(null);
+  usePageMeta({
+    title: `Giới thiệu ${profile?.name || "Hồ Thị Khánh Huyền"} – ${BRAND} | Giảng viên Đại học Duy Tân`,
+    description: `${profile?.name || "Hồ Thị Khánh Huyền"} (cô Huyền) – giảng viên tiếng Trung Đại học Duy Tân, Đà Nẵng. Kinh nghiệm, thành tích, chứng chỉ và cảm nhận của học viên.`,
+    path: "/gioi-thieu",
+  });
 
   if (!profile) {
     return <div className="py-24 text-center text-primary-900/50">Đang tải thông tin...</div>;

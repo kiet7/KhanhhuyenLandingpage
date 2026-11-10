@@ -4,6 +4,8 @@
 import { formatPrice } from "./format.js";
 
 export const SITE_NAME = "Khánh Huyền Chinese";
+// Tên dùng trong tiêu đề trang/kết quả tìm kiếm — chứa cụm người dùng hay tìm ("cô Huyền tiếng Trung")
+export const BRAND = "Cô Huyền Tiếng Trung";
 export const SITE_URL = "https://www.cohuyentiengtrung.blog";
 export const SITE_DESCRIPTION =
   "Học tiếng Trung cùng cô Khánh Huyền — giao tiếp, luyện thi HSK/HSKK tại Đà Nẵng và online.";

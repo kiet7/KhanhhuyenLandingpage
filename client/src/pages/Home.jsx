@@ -7,11 +7,20 @@ import Badge from "../components/ui/Badge";
 import Spinner from "../components/ui/Spinner";
 import CourseCard from "../components/CourseCard";
 import { readCache, writeCache } from "../lib/cache";
+import { BRAND } from "../lib/og";
+import { usePageMeta } from "../lib/seo";
 
 const pickFeatured = (data) => data.filter((c) => c.featured).slice(0, 3);
+const HOME_META = {
+  title: `${BRAND} – Hồ Thị Khánh Huyền | Giảng viên tiếng Trung Đại học Duy Tân, Đà Nẵng`,
+  description:
+    "Cô Huyền Tiếng Trung (Hồ Thị Khánh Huyền) – giảng viên tiếng Trung Đại học Duy Tân, Đà Nẵng. Khóa học tiếng Trung giao tiếp, luyện thi HSK 1-6, HSKK cho người mới bắt đầu và sinh viên.",
+  path: "/",
+};
 
 export default function Home() {
   const { profile } = useOutletContext();
+  usePageMeta(HOME_META);
   const [courses, setCourses] = useState(() => {
     const cached = readCache("courses");
     return cached ? pickFeatured(cached) : null;

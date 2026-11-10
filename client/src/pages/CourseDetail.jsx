@@ -8,7 +8,8 @@ import Button from "../components/ui/Button";
 import Spinner from "../components/ui/Spinner";
 import { formatPrice, formatDate } from "../lib/format";
 import { readCache } from "../lib/cache";
-import { courseUrl, SITE_NAME } from "../lib/og";
+import { BRAND, buildCourseOg, courseUrl } from "../lib/og";
+import { usePageMeta } from "../lib/seo";
 import ShareButtons from "../components/ShareButtons";
 
 // Lấy khóa học từ danh sách đã cache (trang chủ / danh sách khóa học) để hiện ngay.
@@ -30,14 +31,12 @@ export default function CourseDetail() {
       .catch((err) => setCourse((prev) => (err.response?.status === 404 ? null : prev ?? null)));
   }, [slug]);
 
-  useEffect(() => {
-    if (!course) return;
-    const previous = document.title;
-    document.title = `${course.title} | ${SITE_NAME}`;
-    return () => {
-      document.title = previous;
-    };
-  }, [course]);
+  const og = course ? buildCourseOg(course) : null;
+  usePageMeta({
+    title: og && `${og.title} | ${BRAND}`,
+    description: og?.description,
+    path: `/khoa-hoc/${slug}`,
+  });
 
   async function handleSubmit(e) {
     e.preventDefault();

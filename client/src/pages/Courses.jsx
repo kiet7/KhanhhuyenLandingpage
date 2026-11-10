@@ -3,12 +3,20 @@ import { listCourses } from "../api/courses";
 import CourseCard from "../components/CourseCard";
 import Spinner from "../components/ui/Spinner";
 import { readCache, writeCache } from "../lib/cache";
+import { BRAND } from "../lib/og";
+import { usePageMeta } from "../lib/seo";
 
 const LEVELS = ["Tất cả", "Sơ cấp", "Trung cấp", "Cao cấp"];
 
 export default function Courses() {
   const [courses, setCourses] = useState(() => readCache("courses"));
   const [level, setLevel] = useState("Tất cả");
+  usePageMeta({
+    title: `Khóa học tiếng Trung giao tiếp, luyện thi HSK – ${BRAND} Đà Nẵng`,
+    description:
+      "Các khóa học tiếng Trung của cô Huyền (Hồ Thị Khánh Huyền, giảng viên Đại học Duy Tân): giao tiếp, luyện thi HSK 1-6, HSKK – học tại Đà Nẵng và online.",
+    path: "/khoa-hoc",
+  });
 
   useEffect(() => {
     listCourses()

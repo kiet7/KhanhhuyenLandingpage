@@ -1,8 +1,28 @@
 // Vercel Function: trả index.html có sẵn thẻ Open Graph của khóa học cho bot mạng xã hội.
 // Facebook/Zalo không chạy JavaScript nên không đọc được nội dung SPA; vercel.json chỉ
 // rewrite /khoa-hoc/:slug về đây khi user-agent là bot, người dùng thường vẫn nhận SPA tĩnh.
-import { SITE_NAME, OG_IMAGE, buildCourseOg } from "../client/src/lib/og.js";
+import { BRAND, SITE_NAME, SITE_URL, OG_IMAGE, buildCourseOg } from "../client/src/lib/og.js";
 import { fetchCourse, requestOrigin } from "./_course.js";
+
+// Schema Course cho Google (kết quả tìm kiếm dạng khóa học). Nhà cung cấp trỏ tới Person
+// khai báo trong index.html (#person).
+function courseJsonLd(course, og) {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "Course",
+    name: course.title,
+    description: og.description,
+    url: og.url,
+    inLanguage: "vi-VN",
+    educationalLevel: course.level,
+    provider: { "@type": "Person", "@id": `${SITE_URL}/#person`, name: "Hồ Thị Khánh Huyền" },
+    ...(course.price
+      ? { offers: { "@type": "Offer", price: course.price, priceCurrency: "VND", category: "Paid" } }
+      : {}),
+  };
+  // Chặn "</script>" trong dữ liệu làm vỡ thẻ script
+  return `<script type="application/ld+json">${JSON.stringify(data).replace(/</g, "\\u003c")}</script>`;
+}
 
 function escapeHtml(value) {
   return String(value)
@@ -12,9 +32,9 @@ function escapeHtml(value) {
     .replace(/>/g, "&gt;");
 }
 
-function metaTags(og) {
+function metaTags(og, course) {
   const tags = [
-    `<title>${escapeHtml(og.title)} | ${escapeHtml(SITE_NAME)}</title>`,
+    `<title>${escapeHtml(og.title)} | ${escapeHtml(BRAND)}</title>`,
     `<meta name="description" content="${escapeHtml(og.description)}" />`,
     `<link rel="canonical" href="${escapeHtml(og.url)}" />`,
     `<meta property="og:type" content="website" />`,
@@ -33,6 +53,7 @@ function metaTags(og) {
       `<meta property="og:image:alt" content="${escapeHtml(og.title)}" />`
     );
   }
+  tags.push(courseJsonLd(course, og));
   return tags.join("\n    ");
 }
 
@@ -50,7 +71,7 @@ export default async function handler(req, res) {
     ? html.replace(
         /<!-- og:start[\s\S]*?<!-- og:end -->/,
         // Ảnh lấy từ cùng domain mà bot đang đọc, tránh phụ thuộc DNS của domain khác
-        `<!-- og:start -->\n    ${metaTags(buildCourseOg(course, { origin }))}\n    <!-- og:end -->`
+        `<!-- og:start -->\n    ${metaTags(buildCourseOg(course, { origin }), course)}\n    <!-- og:end -->`
       )
     : html; // không lấy được khóa học: giữ thẻ mặc định của site
 
