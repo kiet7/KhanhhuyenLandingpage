@@ -144,7 +144,7 @@ export default function Home() {
         <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6">
           <div className="mb-8 flex items-end justify-between">
             <div>
-              <h2 className="font-display text-2xl font-bold text-primary-900 sm:text-3xl">Góc học tiếng Trung</h2>
+              <h2 className="font-display text-2xl font-bold text-primary-900 sm:text-3xl">Góc chia sẻ</h2>
               <p className="text-primary-900/60">Kinh nghiệm học và luyện thi HSK từ cô Huyền</p>
             </div>
             <Link to="/bai-viet" className="hidden text-sm font-semibold text-primary-600 hover:underline sm:block">
