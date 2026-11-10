@@ -1,7 +1,7 @@
 // Vercel Function: trả index.html có sẵn thẻ Open Graph của khóa học cho bot mạng xã hội.
 // Facebook/Zalo không chạy JavaScript nên không đọc được nội dung SPA; vercel.json chỉ
 // rewrite /khoa-hoc/:slug về đây khi user-agent là bot, người dùng thường vẫn nhận SPA tĩnh.
-import { SITE_NAME, OG_IMAGE, buildCourseOg } from "../src/lib/og.js";
+import { SITE_NAME, OG_IMAGE, buildCourseOg } from "../client/src/lib/og.js";
 
 const API_URL = (process.env.VITE_API_URL || "https://khanhhuyenlandingpageserver.onrender.com").replace(/\/$/, "");
 const API_BASE = API_URL.endsWith("/api") ? API_URL : `${API_URL}/api`;

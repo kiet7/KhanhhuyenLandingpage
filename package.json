@@ -1,6 +1,7 @@
 {
   "name": "khanhhuyen-landingpage",
   "private": true,
+  "type": "module",
   "scripts": {
     "postinstall": "npm --prefix client install",
     "dev": "npm --prefix client run dev",

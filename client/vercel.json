@@ -1,17 +1,6 @@
 {
   "outputDirectory": "dist",
   "rewrites": [
-    {
-      "source": "/khoa-hoc/:slug",
-      "has": [
-        {
-          "type": "header",
-          "key": "user-agent",
-          "value": ".*(facebookexternalhit|Facebot|meta-externalagent|Zalo|Twitterbot|LinkedInBot|Slackbot|TelegramBot|WhatsApp|Discordbot|SkypeUriPreview|Pinterest|Googlebot|bingbot).*"
-        }
-      ],
-      "destination": "/api/og?slug=:slug"
-    },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
