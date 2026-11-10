@@ -2,10 +2,7 @@
 // Facebook/Zalo không chạy JavaScript nên không đọc được nội dung SPA; vercel.json chỉ
 // rewrite /khoa-hoc/:slug về đây khi user-agent là bot, người dùng thường vẫn nhận SPA tĩnh.
 import { SITE_NAME, OG_IMAGE, buildCourseOg } from "../client/src/lib/og.js";
-
-const API_URL = (process.env.VITE_API_URL || "https://khanhhuyenlandingpageserver.onrender.com").replace(/\/$/, "");
-const API_BASE = API_URL.endsWith("/api") ? API_URL : `${API_URL}/api`;
-const API_TIMEOUT_MS = 8000; // backend Render có thể đang khởi động lại; quá hạn thì dùng thẻ mặc định
+import { fetchCourse, requestOrigin } from "./_course.js";
 
 function escapeHtml(value) {
   return String(value)
@@ -39,32 +36,21 @@ function metaTags(og) {
   return tags.join("\n    ");
 }
 
-async function fetchCourse(slug) {
-  try {
-    const res = await fetch(`${API_BASE}/courses/${encodeURIComponent(slug)}`, {
-      signal: AbortSignal.timeout(API_TIMEOUT_MS),
-    });
-    return res.ok ? await res.json() : null;
-  } catch {
-    return null;
-  }
-}
-
 export default async function handler(req, res) {
   const url = new URL(req.url, "http://localhost");
   const slug = url.searchParams.get("slug") || "";
-  const proto = req.headers["x-forwarded-proto"] || "https";
-  const origin = `${proto}://${req.headers["x-forwarded-host"] || req.headers.host}`;
+  const origin = requestOrigin(req);
 
   const [html, course] = await Promise.all([
     fetch(`${origin}/index.html`).then((r) => r.text()),
-    slug ? fetchCourse(slug) : null,
+    fetchCourse(slug),
   ]);
 
   const page = course
     ? html.replace(
         /<!-- og:start[\s\S]*?<!-- og:end -->/,
-        `<!-- og:start -->\n    ${metaTags(buildCourseOg(course))}\n    <!-- og:end -->`
+        // Ảnh lấy từ cùng domain mà bot đang đọc, tránh phụ thuộc DNS của domain khác
+        `<!-- og:start -->\n    ${metaTags(buildCourseOg(course, { origin }))}\n    <!-- og:end -->`
       )
     : html; // không lấy được khóa học: giữ thẻ mặc định của site
 

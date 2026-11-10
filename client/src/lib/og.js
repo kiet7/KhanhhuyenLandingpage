@@ -20,21 +20,18 @@ function formatDay(value) {
   return `${d}/${m}/${y}`;
 }
 
-// Ảnh Cloudinary: cắt sẵn về 1200x630 (g_auto giữ chủ thể) để Facebook hiển thị ảnh lớn, không bị cắt lệch.
-export function ogImageUrl(url) {
-  if (!url) return "";
-  if (!url.includes("res.cloudinary.com") || !url.includes("/image/upload/")) return url;
-  return url.replace(
-    "/image/upload/",
-    `/image/upload/c_fill,w_${OG_IMAGE.width},h_${OG_IMAGE.height},g_auto,q_auto,f_jpg/`
-  );
-}
-
 export function courseUrl(course) {
   return `${SITE_URL}/khoa-hoc/${course.slug}`;
 }
 
-export function buildCourseOg(course) {
+// Ảnh chia sẻ dạng card khóa học do api/og-image.js vẽ (bố cục ở lib/ogCard.js).
+// v = thời điểm sửa khóa học: sửa xong là ra URL ảnh mới, không bị cache ảnh cũ.
+export function courseImageUrl(course, origin = SITE_URL) {
+  const version = Date.parse(course.updatedAt) || "";
+  return `${origin}/api/og-image?slug=${encodeURIComponent(course.slug)}&v=${version}`;
+}
+
+export function buildCourseOg(course, { origin = SITE_URL } = {}) {
   const facts = [
     course.level,
     course.startDate && `Khai giảng ${formatDay(course.startDate)}`,
@@ -46,7 +43,7 @@ export function buildCourseOg(course) {
   return {
     title: course.title,
     description: truncate([intro, facts].filter(Boolean).join(" — "), DESCRIPTION_MAX),
-    image: ogImageUrl(course.imageUrl),
+    image: courseImageUrl(course, origin),
     url: courseUrl(course),
   };
 }
