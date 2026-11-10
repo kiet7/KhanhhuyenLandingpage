@@ -9,6 +9,16 @@ const emptyAchievement = { title: "", description: "", year: "", imageUrl: "" };
 const emptyCertificate = { title: "", issuer: "", year: "", imageUrl: "" };
 const emptyTestimonial = { studentName: "", content: "", rating: 5, avatarUrl: "" };
 
+function Field({ label, hint, className = "", children }) {
+  return (
+    <label className={`flex flex-col gap-1 ${className}`}>
+      <span className="text-sm font-semibold text-primary-900">{label}</span>
+      {children}
+      {hint && <span className="text-xs text-primary-900/50">{hint}</span>}
+    </label>
+  );
+}
+
 export default function ManageProfile() {
   const [profile, setProfile] = useState(null);
   const [saving, setSaving] = useState(false);
@@ -92,52 +102,75 @@ export default function ManageProfile() {
       <Card className="p-6">
         <h2 className="font-semibold text-primary-900">Thông tin chung</h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
-          <input
-            placeholder="Họ tên"
-            value={profile.name}
-            onChange={(e) => field("name", e.target.value)}
-            className={inputClass}
-          />
-          <input
-            placeholder="Chức danh (VD: Giảng viên tiếng Trung)"
-            value={profile.title}
-            onChange={(e) => field("title", e.target.value)}
-            className={inputClass}
-          />
-          <input
-            type="number"
-            placeholder="Số năm kinh nghiệm"
-            value={profile.yearsExperience}
-            onChange={(e) => field("yearsExperience", Number(e.target.value))}
-            className={inputClass}
-          />
-          <input
-            type="number"
-            placeholder="Số học viên"
-            value={profile.studentsCount}
-            onChange={(e) => field("studentsCount", Number(e.target.value))}
-            className={inputClass}
-          />
+          <Field label="Họ tên" hint="Hiển thị ở trang chủ, trang giới thiệu và chân trang">
+            <input
+              placeholder="VD: Hồ Thị Khánh Huyền"
+              value={profile.name}
+              onChange={(e) => field("name", e.target.value)}
+              className={inputClass}
+            />
+          </Field>
+          <Field label="Chức danh" hint="Dòng mô tả ngắn dưới họ tên">
+            <input
+              placeholder="VD: Giảng viên tiếng Trung"
+              value={profile.title}
+              onChange={(e) => field("title", e.target.value)}
+              className={inputClass}
+            />
+          </Field>
+          <Field label="Số năm kinh nghiệm" hint="Chỉ nhập số, hiển thị ở trang chủ">
+            <input
+              type="number"
+              min={0}
+              placeholder="VD: 5"
+              value={profile.yearsExperience}
+              onChange={(e) => field("yearsExperience", Number(e.target.value))}
+              className={inputClass}
+            />
+          </Field>
+          <Field label="Số học viên" hint="Tổng số học viên đã dạy, hiển thị ở trang chủ">
+            <input
+              type="number"
+              min={0}
+              placeholder="VD: 500"
+              value={profile.studentsCount}
+              onChange={(e) => field("studentsCount", Number(e.target.value))}
+              className={inputClass}
+            />
+          </Field>
         </div>
-        <input
-          placeholder="Địa chỉ"
-          value={profile.address}
-          onChange={(e) => field("address", e.target.value)}
-          className={`${inputClass} mt-4`}
-        />
-        <textarea
-          placeholder="Giới thiệu bản thân"
-          value={profile.bio}
-          onChange={(e) => field("bio", e.target.value)}
-          rows={5}
-          className={`${inputClass} mt-4`}
-        />
-        <div className="mt-4 grid gap-4 sm:grid-cols-2">
-          <ImageUploader label="Ảnh đại diện" value={profile.avatarUrl} onChange={(url) => field("avatarUrl", url)} />
+        <Field label="Địa chỉ" hint="Hiển thị ở chân trang" className="mt-4">
+          <input
+            placeholder="VD: K7/25 Quang Trung, Hải Châu, TP Đà Nẵng"
+            value={profile.address}
+            onChange={(e) => field("address", e.target.value)}
+            className={inputClass}
+          />
+        </Field>
+        <Field label="Giới thiệu bản thân" hint="Đoạn giới thiệu ở trang chủ và trang giới thiệu" className="mt-4">
+          <textarea
+            placeholder="Vài dòng về kinh nghiệm, phong cách giảng dạy..."
+            value={profile.bio}
+            onChange={(e) => field("bio", e.target.value)}
+            rows={5}
+            className={inputClass}
+          />
+        </Field>
+        <div className="mt-4 grid gap-6 sm:grid-cols-2">
+          <ImageUploader
+            label="Ảnh đại diện"
+            value={profile.avatarUrl}
+            onChange={(url) => field("avatarUrl", url)}
+            recommended={{ width: 800, height: 800 }}
+            hint="Ảnh vuông 1:1, khuôn mặt ở giữa. Hiển thị ở trang chủ và trang giới thiệu (cắt tròn)."
+          />
           <ImageUploader
             label="Ảnh bìa (banner trang giới thiệu)"
             value={profile.coverUrl}
             onChange={(url) => field("coverUrl", url)}
+            recommended={{ width: 1920, height: 600 }}
+            previewClassName="h-20 w-40"
+            hint="Ảnh ngang ~3:1. Hai bên mép bị cắt bớt trên điện thoại, nên để nội dung chính ở giữa."
           />
         </div>
       </Card>

@@ -1,9 +1,20 @@
 import { useState } from "react";
 import { uploadImage } from "../../api/upload";
 
-export default function ImageUploader({ value, onChange, label }) {
+// `recommended` ({ width, height }) — kích thước khuyến nghị, hiển thị kèm kích thước
+// thật của ảnh hiện tại và cảnh báo nếu ảnh nhỏ hơn. `hint` — chú thích thêm.
+// `previewClassName` — đổi khung xem trước (mặc định vuông 80px), vd ảnh bìa dạng ngang.
+export default function ImageUploader({
+  value,
+  onChange,
+  label,
+  hint,
+  recommended,
+  previewClassName = "h-20 w-20",
+}) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [size, setSize] = useState(null); // kích thước thật của ảnh đang hiển thị
 
   async function handleFile(e) {
     const file = e.target.files?.[0];
@@ -20,13 +31,25 @@ export default function ImageUploader({ value, onChange, label }) {
     }
   }
 
+  const tooSmall =
+    recommended && size && (size.width < recommended.width || size.height < recommended.height);
+
   return (
     <div>
       {label && <p className="mb-1 text-sm font-semibold text-primary-900">{label}</p>}
       <div className="flex items-center gap-4">
-        <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-primary-50 ring-1 ring-primary-100">
+        <div
+          className={`${previewClassName} shrink-0 overflow-hidden rounded-xl bg-primary-50 ring-1 ring-primary-100`}
+        >
           {value ? (
-            <img src={value} alt="" className="h-full w-full object-cover" />
+            <img
+              src={value}
+              alt=""
+              className="h-full w-full object-cover"
+              onLoad={(e) =>
+                setSize({ width: e.currentTarget.naturalWidth, height: e.currentTarget.naturalHeight })
+              }
+            />
           ) : (
             <div className="flex h-full w-full items-center justify-center text-xs text-primary-300">
               Chưa có
@@ -38,6 +61,23 @@ export default function ImageUploader({ value, onChange, label }) {
           <input type="file" accept="image/*" className="hidden" onChange={handleFile} disabled={loading} />
         </label>
       </div>
+      {recommended && (
+        <p className="mt-1.5 text-xs text-primary-900/50">
+          Khuyến nghị: {recommended.width} × {recommended.height} px
+          {value && size && (
+            <>
+              {" · "}Ảnh hiện tại:{" "}
+              <span className={tooSmall ? "font-semibold text-amber-600" : "text-primary-900/70"}>
+                {size.width} × {size.height} px
+              </span>
+            </>
+          )}
+        </p>
+      )}
+      {tooSmall && (
+        <p className="mt-0.5 text-xs text-amber-600">Ảnh nhỏ hơn khuyến nghị, có thể bị mờ khi hiển thị.</p>
+      )}
+      {hint && <p className="mt-0.5 text-xs text-primary-900/50">{hint}</p>}
       {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
     </div>
   );
