@@ -219,6 +219,9 @@ export default function CourseForm({
                 label="Ảnh khóa học"
                 value={form.imageUrl}
                 onChange={(url) => setForm({ ...form, imageUrl: url })}
+                recommended={{ width: 1280, height: 720 }}
+                previewClassName="h-20 w-36"
+                hint="Ảnh ngang 16:9, hiển thị ở thẻ khóa học và trang chi tiết."
               />
             </div>
           </>
