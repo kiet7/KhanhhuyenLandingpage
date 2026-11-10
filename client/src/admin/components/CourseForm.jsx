@@ -2,6 +2,7 @@ import { useState } from "react";
 import Card from "../../components/ui/Card";
 import Button from "../../components/ui/Button";
 import ImageUploader from "./ImageUploader";
+import FacebookPreview from "./FacebookPreview";
 
 const DEFAULT_DURATION_WEEKS = 8;
 
@@ -223,6 +224,9 @@ export default function CourseForm({
                 previewClassName="h-20 w-36"
                 hint="Ảnh ngang 16:9, hiển thị ở thẻ khóa học và trang chi tiết."
               />
+            </div>
+            <div className="mt-6">
+              <FacebookPreview course={{ ...form, startDate: form.startDate || null, price: Number(form.price) || 0 }} />
             </div>
           </>
         )}

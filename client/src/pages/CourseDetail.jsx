@@ -8,6 +8,8 @@ import Button from "../components/ui/Button";
 import Spinner from "../components/ui/Spinner";
 import { formatPrice, formatDate } from "../lib/format";
 import { readCache } from "../lib/cache";
+import { courseUrl, SITE_NAME } from "../lib/og";
+import ShareButtons from "../components/ShareButtons";
 
 // Lấy khóa học từ danh sách đã cache (trang chủ / danh sách khóa học) để hiện ngay.
 function cachedCourse(slug) {
@@ -27,6 +29,15 @@ export default function CourseDetail() {
       // 404 = khóa học đã bị xóa/ẩn; lỗi khác (mạng, server ngủ) thì giữ bản cache
       .catch((err) => setCourse((prev) => (err.response?.status === 404 ? null : prev ?? null)));
   }, [slug]);
+
+  useEffect(() => {
+    if (!course) return;
+    const previous = document.title;
+    document.title = `${course.title} | ${SITE_NAME}`;
+    return () => {
+      document.title = previous;
+    };
+  }, [course]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -82,6 +93,9 @@ export default function CourseDetail() {
 
       <h1 className="mt-3 font-display text-3xl font-extrabold text-primary-900">{course.title}</h1>
       <p className="mt-2 text-xl font-semibold text-accent-600">{formatPrice(course.price)}</p>
+      <div className="mt-4">
+        <ShareButtons url={courseUrl(course)} />
+      </div>
       <p className="mt-4 whitespace-pre-line leading-relaxed text-primary-900/80">{course.description}</p>
 
       {course.syllabus?.length > 0 && (
