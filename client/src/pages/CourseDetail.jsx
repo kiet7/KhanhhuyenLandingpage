@@ -22,6 +22,13 @@ export default function CourseDetail() {
   const [course, setCourse] = useState(() => cachedCourse(slug));
   const [form, setForm] = useState({ name: "", phone: "", email: "", message: "" });
   const [status, setStatus] = useState("idle"); // idle | sending | sent | error
+  // Form đăng ký ẩn mặc định; link có #dang-ky thì mở sẵn
+  const [formOpen, setFormOpen] = useState(() => window.location.hash === "#dang-ky");
+
+  function openRegisterForm() {
+    setFormOpen(true);
+    document.getElementById("dang-ky")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 
   useEffect(() => {
     setCourse(cachedCourse(slug));
@@ -91,7 +98,12 @@ export default function CourseDetail() {
       </div>
 
       <h1 className="mt-3 font-display text-3xl font-extrabold text-primary-900">{course.title}</h1>
-      <p className="mt-2 text-xl font-semibold text-accent-600">{formatPrice(course.price)}</p>
+      <div className="mt-2 flex flex-wrap items-center gap-4">
+        <p className="text-xl font-semibold text-accent-600">{formatPrice(course.price)}</p>
+        <Button type="button" onClick={openRegisterForm}>
+          Đăng ký khóa học
+        </Button>
+      </div>
       <div className="mt-4">
         <ShareButtons url={courseUrl(course)} />
       </div>
@@ -113,19 +125,41 @@ export default function CourseDetail() {
         </Card>
       )}
 
-      <Card className="mt-8 p-6 sm:p-8" id="dang-ky">
-        <h2 className="font-display text-lg font-bold text-primary-900">
-          Đăng ký / Liên hệ về khóa học này
-        </h2>
+      <Card className="mt-8 scroll-mt-24 p-6 sm:p-8" id="dang-ky">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="font-display text-lg font-bold text-primary-900">
+            Đăng ký / Liên hệ về khóa học này
+          </h2>
+          {status !== "sent" && (
+            <button
+              type="button"
+              onClick={() => setFormOpen((open) => !open)}
+              aria-expanded={formOpen}
+              aria-controls="form-dang-ky"
+              className={`rounded-full px-5 py-2 text-sm font-semibold transition-colors ${
+                formOpen
+                  ? "bg-primary-50 text-primary-600 hover:bg-primary-100"
+                  : "bg-primary-500 text-white shadow-lg shadow-primary-500/25 hover:bg-primary-600"
+              }`}
+            >
+              {formOpen ? "Thu gọn ▴" : "Đăng ký ngay ▾"}
+            </button>
+          )}
+        </div>
 
-        {status === "sent" ? (
+        {status !== "sent" && !formOpen ? (
+          <p className="mt-2 text-sm text-primary-900/60">
+            Để lại họ tên và số điện thoại, giảng viên sẽ liên hệ tư vấn lịch học và học phí cho bạn.
+          </p>
+        ) : status === "sent" ? (
           <p className="mt-4 rounded-2xl bg-primary-50 p-4 text-primary-700">
             Cảm ơn bạn! Thông tin đã được gửi, giảng viên sẽ liên hệ lại sớm nhất.
           </p>
         ) : (
-          <form onSubmit={handleSubmit} className="mt-4 grid gap-4 sm:grid-cols-2">
+          <form id="form-dang-ky" onSubmit={handleSubmit} className="mt-4 grid gap-4 sm:grid-cols-2">
             <input
               required
+              autoFocus
               placeholder="Họ và tên"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
