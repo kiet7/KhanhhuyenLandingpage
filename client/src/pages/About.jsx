@@ -13,8 +13,8 @@ export default function About() {
 
   return (
     <div>
-      {/* Banner */}
-      <div className="relative h-48 w-full overflow-hidden bg-linear-to-br from-primary-200 to-accent-200 sm:h-64 md:h-80 lg:h-96">
+      {/* Banner — tỉ lệ cố định 16:5 (3,2:1), khớp tỉ lệ cắt ảnh bìa trong admin để ảnh không bị cắt thêm */}
+      <div className="relative aspect-[16/5] w-full overflow-hidden bg-linear-to-br from-primary-200 to-accent-200">
         {profile.coverUrl && (
           <img src={profile.coverUrl} alt="" className="h-full w-full object-cover" />
         )}

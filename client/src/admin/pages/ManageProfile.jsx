@@ -168,9 +168,9 @@ export default function ManageProfile() {
             label="Ảnh bìa (banner trang giới thiệu)"
             value={profile.coverUrl}
             onChange={(url) => field("coverUrl", url)}
-            recommended={{ width: 1920, height: 600 }}
+            recommended={{ width: 2560, height: 800 }}
             previewClassName="h-20 w-40"
-            hint="Ảnh ngang ~3:1. Hai bên mép bị cắt bớt trên điện thoại, nên để nội dung chính ở giữa."
+            hint="Ảnh ngang 16:5 (3,2:1), hiển thị đúng như khung cắt ở mọi màn hình. Nên dùng ảnh gốc độ phân giải cao để không bị vỡ."
           />
         </div>
       </Card>
