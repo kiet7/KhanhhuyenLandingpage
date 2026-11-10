@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
 import { useOutletContext, Link } from "react-router-dom";
 import { listCourses } from "../api/courses";
+import { listPosts } from "../api/posts";
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import Badge from "../components/ui/Badge";
 import Spinner from "../components/ui/Spinner";
 import CourseCard from "../components/CourseCard";
+import PostCard from "../components/PostCard";
 import { readCache, writeCache } from "../lib/cache";
 import { BRAND } from "../lib/og";
 import { usePageMeta } from "../lib/seo";
 
 const pickFeatured = (data) => data.filter((c) => c.featured).slice(0, 3);
+const LATEST_POSTS = 3;
 const HOME_META = {
   title: `${BRAND} – Hồ Thị Khánh Huyền | Giảng viên tiếng Trung Đại học Duy Tân, Đà Nẵng`,
   description:
@@ -25,6 +28,7 @@ export default function Home() {
     const cached = readCache("courses");
     return cached ? pickFeatured(cached) : null;
   });
+  const [posts, setPosts] = useState(() => readCache("posts")?.slice(0, LATEST_POSTS) ?? null);
 
   useEffect(() => {
     listCourses()
@@ -33,6 +37,12 @@ export default function Home() {
         setCourses(pickFeatured(data));
       })
       .catch(() => setCourses((prev) => prev ?? []));
+    listPosts()
+      .then((data) => {
+        writeCache("posts", data);
+        setPosts(data.slice(0, LATEST_POSTS));
+      })
+      .catch(() => {});
   }, []);
 
   return (
@@ -128,6 +138,26 @@ export default function Home() {
           </div>
         )}
       </section>
+
+      {/* Bài viết mới — chỉ hiện khi đã có bài */}
+      {posts?.length > 0 && (
+        <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6">
+          <div className="mb-8 flex items-end justify-between">
+            <div>
+              <h2 className="font-display text-2xl font-bold text-primary-900 sm:text-3xl">Góc học tiếng Trung</h2>
+              <p className="text-primary-900/60">Kinh nghiệm học và luyện thi HSK từ cô Huyền</p>
+            </div>
+            <Link to="/bai-viet" className="hidden text-sm font-semibold text-primary-600 hover:underline sm:block">
+              Xem tất cả →
+            </Link>
+          </div>
+          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+            {posts.map((post) => (
+              <PostCard key={post._id} post={post} />
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Testimonials */}
       {profile?.testimonials?.length > 0 && (

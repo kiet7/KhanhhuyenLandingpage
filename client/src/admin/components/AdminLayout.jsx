@@ -5,6 +5,7 @@ const links = [
   { to: "/admin", label: "Tổng quan", end: true },
   { to: "/admin/thong-tin", label: "Thông tin cá nhân" },
   { to: "/admin/khoa-hoc", label: "Khóa học" },
+  { to: "/admin/bai-viet", label: "Bài viết" },
   { to: "/admin/lien-he", label: "Liên hệ" },
 ];
 

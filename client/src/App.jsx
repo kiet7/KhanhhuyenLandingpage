@@ -5,6 +5,8 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import Courses from "./pages/Courses";
 import CourseDetail from "./pages/CourseDetail";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 import NotFound from "./pages/NotFound";
 
 import AdminLayout from "./admin/components/AdminLayout";
@@ -14,6 +16,7 @@ import Dashboard from "./admin/pages/Dashboard";
 import ManageProfile from "./admin/pages/ManageProfile";
 import ManageCourses from "./admin/pages/ManageCourses";
 import ContactSubmissions from "./admin/pages/ContactSubmissions";
+import ManagePosts from "./admin/pages/ManagePosts";
 
 function App() {
   return (
@@ -25,6 +28,8 @@ function App() {
             <Route path="/gioi-thieu" element={<About />} />
             <Route path="/khoa-hoc" element={<Courses />} />
             <Route path="/khoa-hoc/:slug" element={<CourseDetail />} />
+            <Route path="/bai-viet" element={<Blog />} />
+            <Route path="/bai-viet/:slug" element={<BlogPost />} />
           </Route>
 
           <Route path="/admin/login" element={<Login />} />
@@ -39,6 +44,7 @@ function App() {
             <Route index element={<Dashboard />} />
             <Route path="thong-tin" element={<ManageProfile />} />
             <Route path="khoa-hoc" element={<ManageCourses />} />
+            <Route path="bai-viet" element={<ManagePosts />} />
             <Route path="lien-he" element={<ContactSubmissions />} />
           </Route>
 

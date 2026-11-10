@@ -2,7 +2,7 @@
 // Được tham chiếu từ thẻ og:image do api/og.js trả cho Facebook/Zalo.
 import { ImageResponse } from "@vercel/og";
 import { buildCourseCard, collectText, CARD_FONTS, CARD_SIZE } from "../client/src/lib/ogCard.js";
-import { fetchCourse, requestOrigin } from "./_course.js";
+import { fetchCourse, requestOrigin } from "./_api.js";
 
 // Tải font từ Google Fonts, chỉ gồm các ký tự cần vẽ (Google trả TTF khi user-agent không phải trình duyệt).
 async function loadGoogleFont(family, weight, text) {

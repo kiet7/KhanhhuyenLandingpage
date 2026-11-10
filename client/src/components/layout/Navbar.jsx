@@ -5,6 +5,7 @@ const links = [
   { to: "/", label: "Trang chủ" },
   { to: "/gioi-thieu", label: "Giới thiệu" },
   { to: "/khoa-hoc", label: "Khóa học" },
+  { to: "/bai-viet", label: "Bài viết" },
 ];
 
 export default function Navbar() {

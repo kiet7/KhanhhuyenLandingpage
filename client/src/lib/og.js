@@ -33,6 +33,23 @@ export function courseImageUrl(course, origin = SITE_URL) {
   return `${origin}/api/og-image?slug=${encodeURIComponent(course.slug)}&v=${version}`;
 }
 
+export function postUrl(post) {
+  return `${SITE_URL}/bai-viet/${post.slug}`;
+}
+
+// Thẻ chia sẻ cho bài viết: ảnh bìa cắt về 1200x630 (ảnh bìa nên có sẵn tỉ lệ này), không có thì dùng logo.
+export function buildPostOg(post, { origin = SITE_URL } = {}) {
+  const cover = post.coverUrl?.includes("res.cloudinary.com")
+    ? post.coverUrl.replace("/image/upload/", `/image/upload/c_fill,w_${OG_IMAGE.width},h_${OG_IMAGE.height},g_auto,q_auto,f_jpg/`)
+    : post.coverUrl;
+  return {
+    title: post.title,
+    description: truncate(post.excerpt || String(post.content || "").replace(/[#>*_`[\]()!-]/g, " "), DESCRIPTION_MAX),
+    image: cover || `${origin}/logo.jpg`,
+    url: postUrl(post),
+  };
+}
+
 export function buildCourseOg(course, { origin = SITE_URL } = {}) {
   const facts = [
     course.level,

@@ -13,6 +13,17 @@
       ],
       "destination": "/api/og?slug=:slug"
     },
+    {
+      "source": "/bai-viet/:slug",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*(facebookexternalhit|Facebot|meta-externalagent|Zalo|Twitterbot|LinkedInBot|Slackbot|TelegramBot|WhatsApp|Discordbot|SkypeUriPreview|Pinterest|Googlebot|bingbot|coccocbot).*"
+        }
+      ],
+      "destination": "/api/og?type=post&slug=:slug"
+    },
     { "source": "/sitemap.xml", "destination": "/api/sitemap" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
