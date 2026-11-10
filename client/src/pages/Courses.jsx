@@ -2,17 +2,21 @@ import { useEffect, useState } from "react";
 import { listCourses } from "../api/courses";
 import CourseCard from "../components/CourseCard";
 import Spinner from "../components/ui/Spinner";
+import { readCache, writeCache } from "../lib/cache";
 
 const LEVELS = ["Tất cả", "Sơ cấp", "Trung cấp", "Cao cấp"];
 
 export default function Courses() {
-  const [courses, setCourses] = useState(null);
+  const [courses, setCourses] = useState(() => readCache("courses"));
   const [level, setLevel] = useState("Tất cả");
 
   useEffect(() => {
     listCourses()
-      .then(setCourses)
-      .catch(() => setCourses([]));
+      .then((data) => {
+        writeCache("courses", data);
+        setCourses(data);
+      })
+      .catch(() => setCourses((prev) => prev ?? []));
   }, []);
 
   const filtered =

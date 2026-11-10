@@ -1,0 +1,17 @@
+# Render gói Free cho server "ngủ" sau 15 phút không có request, request đầu tiên
+# sau đó mất ~30-60s để khởi động lại. Ping /api/health định kỳ để giữ server thức.
+# Lưu ý: GitHub có thể chạy trễ lịch vài phút và tự tắt workflow theo lịch nếu
+# repo không có commit trong 60 ngày.
+name: Keep Render backend awake
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping health endpoint
+        run: curl -fsS --max-time 120 --retry 3 --retry-delay 10 https://khanhhuyenlandingpageserver.onrender.com/api/health

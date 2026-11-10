@@ -7,17 +7,25 @@ import Badge from "../components/ui/Badge";
 import Button from "../components/ui/Button";
 import Spinner from "../components/ui/Spinner";
 import { formatPrice, formatDate } from "../lib/format";
+import { readCache } from "../lib/cache";
+
+// Lấy khóa học từ danh sách đã cache (trang chủ / danh sách khóa học) để hiện ngay.
+function cachedCourse(slug) {
+  return readCache("courses")?.find((c) => c.slug === slug);
+}
 
 export default function CourseDetail() {
   const { slug } = useParams();
-  const [course, setCourse] = useState(undefined);
+  const [course, setCourse] = useState(() => cachedCourse(slug));
   const [form, setForm] = useState({ name: "", phone: "", email: "", message: "" });
   const [status, setStatus] = useState("idle"); // idle | sending | sent | error
 
   useEffect(() => {
+    setCourse(cachedCourse(slug));
     getCourseBySlug(slug)
       .then(setCourse)
-      .catch(() => setCourse(null));
+      // 404 = khóa học đã bị xóa/ẩn; lỗi khác (mạng, server ngủ) thì giữ bản cache
+      .catch((err) => setCourse((prev) => (err.response?.status === 404 ? null : prev ?? null)));
   }, [slug]);
 
   async function handleSubmit(e) {

@@ -6,15 +6,24 @@ import Card from "../components/ui/Card";
 import Badge from "../components/ui/Badge";
 import Spinner from "../components/ui/Spinner";
 import CourseCard from "../components/CourseCard";
+import { readCache, writeCache } from "../lib/cache";
+
+const pickFeatured = (data) => data.filter((c) => c.featured).slice(0, 3);
 
 export default function Home() {
   const { profile } = useOutletContext();
-  const [courses, setCourses] = useState(null);
+  const [courses, setCourses] = useState(() => {
+    const cached = readCache("courses");
+    return cached ? pickFeatured(cached) : null;
+  });
 
   useEffect(() => {
     listCourses()
-      .then((data) => setCourses(data.filter((c) => c.featured).slice(0, 3)))
-      .catch(() => setCourses([]));
+      .then((data) => {
+        writeCache("courses", data);
+        setCourses(pickFeatured(data));
+      })
+      .catch(() => setCourses((prev) => prev ?? []));
   }, []);
 
   return (

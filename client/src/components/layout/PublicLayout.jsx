@@ -4,14 +4,18 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import FloatingContact from "./FloatingContact";
 import { getProfile } from "../../api/profile";
+import { readCache, writeCache } from "../../lib/cache";
 
 export default function PublicLayout() {
-  const [profile, setProfile] = useState(null);
+  const [profile, setProfile] = useState(() => readCache("profile"));
 
   useEffect(() => {
     getProfile()
-      .then(setProfile)
-      .catch(() => setProfile(null));
+      .then((data) => {
+        writeCache("profile", data);
+        setProfile(data);
+      })
+      .catch(() => {}); // lỗi mạng: giữ profile đang có (từ cache hoặc null)
   }, []);
 
   return (
